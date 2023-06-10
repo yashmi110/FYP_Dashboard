@@ -1,0 +1,102 @@
+{% load static %}
+
+<html lang="en">
+<head>
+    <title>RT</title>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+<body>
+    <h1>FYP Dashboard</h1>
+
+    <form method="post" enctype="multipart/form-data" id="dataset">
+        {% csrf_token %}
+        {{ form.file }}
+        <input type="file" name="document" accept=".csv">
+        <button type="submit" name="btnUpload">Upload file</button>
+
+    {% if isUploadDone %}
+    <p>
+         Number of Rows {{ rows }}
+    </p>
+    <p>
+        <label for="parameterSelect">Choose label parameter</label>
+        <select type="text" id="parameterSelect" name="parameterSelect">
+            {% for col in columns %}
+            <option value="{{ col }}">{{ col }}</option>
+            {% endfor %}
+        </select>
+    </p>
+
+    <div style="flex:1; justify-content: center;">
+        <button type="submit" name="btnFeatureSelection" >Feature Selection
+        </button>
+    </div>
+
+    <p>
+        <label for="modelTypeSelect">Learning model</label>
+        <select type="text" id="modelTypeSelect" name="modelTypeSelect">
+            <option value="knn">KNN</option>
+            <option value="rf">Random Forest</option>
+            <option value="lr">Logistic Regression</option>
+            <option value="dt">Decision Tree</option>
+        </select>
+    </p>
+        <button type="submit" name="btnNormalEnv" >Train on Normal Environment
+        </button>
+    <p>
+        Accuracy {{ acc }}
+    </p>
+    <p>
+        Precision {{ prec }}
+    </p>
+    <p>
+        Recall {{ rec }}
+    </p>
+    <p>
+        F1-Score {{ f1 }}
+    </p>
+     <h4>Adversarial Environment</h4>
+     <p>
+        <label for="attackTypeSelect">Attack model</label>
+        <select type="text" id="attackTypeSelect" name="attackTypeSelect">
+            <option value="zoo">Zeroth Order Optimisation</option>
+            <option value="dp">DeepFool</option>
+            <option value="en">ElasticNet</option>
+        </select>
+    </p>
+
+     <div style="flex:1; justify-content: center;">
+        <button type="submit" name="btnAttack" >Attack
+        </button>
+    </div>
+
+    <p>
+         {% for description in description_list %}
+            <p>{{ description }}</p>
+        {% endfor %}
+    </p>
+
+    <p>
+        Accuracy {{ a_acc }}
+    </p>
+    <p>
+        Precision {{ a_prec }}
+    </p>
+    <p>
+        Recall {{ a_rec }}
+    </p>
+    <p>
+        F1-Score {{ a_f1 }}
+    </p>
+
+    <div style="flex:1; justify-content: center;">
+        <button type="submit" name="btnDefence" >Apply Defence
+        </button>
+    </div>
+
+    {% endif %}
+
+    </form>
+
+</body>
+</html>
