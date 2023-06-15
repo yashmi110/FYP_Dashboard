@@ -5,7 +5,7 @@ from django.core.files.storage import FileSystemStorage
 from django.shortcuts import render
 
 from FYP_Dashboard.Utility.attack import Attack
-from FYP_Dashboard.Utility.defence import Defence
+from FYP_Dashboard.Utility.defense import Defense
 from FYP_Dashboard.Utility.explainable_ai import ExplainableAI
 from FYP_Dashboard.Utility.feature_selection import FeatureSelection
 from FYP_Dashboard.Utility.model_training import ModelTraining
@@ -15,7 +15,7 @@ feature_selection = FeatureSelection()
 model_training = ModelTraining()
 attack = Attack()
 explainable = ExplainableAI()
-defence = Defence()
+defence = Defense()
 
 df = pd.DataFrame()
 
@@ -27,8 +27,10 @@ selected_train_model = {}
 before_attack = []
 after_attack = []
 
+
 def index(request):
-    global X_train, X_test, yTrain, yTest, x_train_adv, x_test_adv,selected_train_model, before_attack, after_attack, y_train_adv
+    print(request.POST)
+    global X_train, X_test, yTrain, yTest, x_train_adv, x_test_adv, selected_train_model, before_attack, after_attack, y_train_adv
 
     if 'btnUpload' in request.POST:
         uploaded_file = request.FILES['document']
@@ -73,12 +75,12 @@ def index(request):
         attack_type = request.POST['attackTypeSelect']
         x_train_adv = attack.generate_adversarial_samples(X_train.values, attack_type, selected_train_model)
         x_test_adv = attack.generate_adversarial_samples(X_test.values, attack_type, selected_train_model)
-        after_attack = explainable.get_values(x_train_adv,X_train.columns, selected_train_model, x_test_adv[0])
+        after_attack = explainable.get_values(x_train_adv, X_train.columns, selected_train_model, x_test_adv[0])
 
         y_train_adv = selected_train_model.predict(x_train_adv)
-        data["description_list"] = explainable.get_description(before_attack,after_attack, X_train.columns)
+        data["description_list"] = explainable.get_description(before_attack, after_attack, X_train.columns)
 
-        acc, prec, rec, f1 = attack.attack_evaluation(x_train_adv,yTrain,selected_train_model)
+        acc, prec, rec, f1 = attack.attack_evaluation(x_train_adv, yTrain, selected_train_model)
 
         data['a_acc'] = round((acc * 100), 2)
         data['a_prec'] = round((prec * 100), 2)
@@ -87,6 +89,19 @@ def index(request):
 
     elif 'btnDefence' in request.POST:
 
-        defence.apply_defence(X_train,x_train_adv,yTrain,y_train_adv,X_test)
+        defense_type = request.POST['defenseTypeSelect']
+        if defense_type == "Trainee":
+            acc, prec, rec, f1 = defence.adversarial_training_defense(selected_train_model, X_train, x_train_adv,
+                                                                      yTrain, y_train_adv, X_test, yTest)
+        elif defense_type == "Randomization":
+            pass
+        else:
+            acc, prec, rec, f1 = defence.provable_defense(selected_train_model, X_train, x_train_adv, yTrain,
+                                                          y_train_adv, X_test, yTest)
+
+        data['d_acc'] = round((acc * 100), 2)
+        data['d_prec'] = round((prec * 100), 2)
+        data['d_rec'] = round((rec * 100), 2)
+        data['d_f1'] = round((f1 * 100), 2)
 
     return render(request, 'index.html', data)
