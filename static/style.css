@@ -1,8 +1,13 @@
 body {
     background-color: #fff;
-    color: #000;
+    color: #FF0000;
 }
 
 h1 {
-    font-size: 2em;
+    font-size: 12px;
+    color: #FF0000;
+}
+
+.header{
+    font-color:#FF0000;
 }
