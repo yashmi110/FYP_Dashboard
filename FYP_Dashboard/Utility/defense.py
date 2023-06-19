@@ -22,23 +22,18 @@ class Defense:
 
         return acc, prec, rec, f1
 
-    def ibp_defense(self, x):
-        # Define the lower and upper bounds
-        lower_bound = self.x_train.min(axis=0)
-        upper_bound = self.x_train.max(axis=0)
-
-        # Apply the bounds to the input data
-        x_defended = tf.clip_by_value(x, lower_bound, upper_bound)
-
-        return x_defended
     def provable_defense(self, selected_train_model, x_train, x_train_adv, y_train, y_train_adv, x_test, y_test):
 
         new_x_train = np.append(x_train, x_train_adv, axis=0)
         new_y_train = np.append(y_train, y_train_adv, axis=0)
 
         self_model = selected_train_model.fit(new_x_train, new_y_train)
-        x_test_defended = self.ibp_defense(x_test)
 
+        lower_bound = x_train.min(axis=0)
+        upper_bound = x_train.max(axis=0)
+
+        # Apply the bounds to the input data
+        x_test_defended = tf.clip_by_value(x_test, lower_bound, upper_bound)
         x_predict_defended = self_model.predict(x_test_defended)
 
         acc = accuracy_score(y_test, x_predict_defended)
