@@ -94,7 +94,8 @@ def index(request):
             acc, prec, rec, f1 = defence.adversarial_training_defense(selected_train_model, X_train, x_train_adv,
                                                                       yTrain, y_train_adv, X_test, yTest)
         elif defense_type == "Randomization":
-            pass
+            acc, prec, rec, f1 = defence.randomization_defense(selected_train_model, X_train, x_train_adv, yTrain,
+                                                          y_train_adv, X_test, yTest)
         else:
             acc, prec, rec, f1 = defence.provable_defense(selected_train_model, X_train, x_train_adv, yTrain,
                                                           y_train_adv, X_test, yTest)
