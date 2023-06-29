@@ -91,7 +91,7 @@ def index(request):
 
         defense_type = request.POST['defenseTypeSelect']
         if defense_type == "Trainee":
-            acc, prec, rec, f1 = defence.adversarial_training_defense(selected_train_model, X_train, x_train_adv,
+            acc, prec, rec, f1, roc, cm = defence.adversarial_training_defense(selected_train_model, X_train, x_train_adv,
                                                                       yTrain, y_train_adv, X_test, yTest)
         elif defense_type == "Randomization":
             acc, prec, rec, f1 = defence.randomization_defense(selected_train_model, X_train, x_train_adv, yTrain,
@@ -104,5 +104,7 @@ def index(request):
         data['d_prec'] = round((prec * 100), 2)
         data['d_rec'] = round((rec * 100), 2)
         data['d_f1'] = round((f1 * 100), 2)
+        data['roc'] = roc
+        data['cm'] = cm
 
     return render(request, 'index.html', data)

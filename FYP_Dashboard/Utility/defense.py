@@ -3,6 +3,17 @@ from sklearn.metrics import precision_score, recall_score, f1_score, accuracy_sc
 import tensorflow as tf
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.impute import SimpleImputer
+from matplotlib import pyplot as plt_curve
+from sklearn import metrics
+from sklearn.metrics import confusion_matrix
+import pickle
+import seaborn as sns
+from ..settings import MEDIA_URL, MEDIA_ROOT
+
+from io import BytesIO
+from django.core.files.base import ContentFile
+from django.core.files.uploadedfile import InMemoryUploadedFile
+from ..models import *
 
 class Defense:
 
@@ -22,7 +33,43 @@ class Defense:
         rec = recall_score(y_test, new_yPred)
         f1 = f1_score(y_test, new_yPred)
 
-        return acc, prec, rec, f1
+        y_pred_prob = selected_train_model.predict_proba(x_test)[::, 1]
+        fpr, tpr, _ = metrics.roc_curve(y_test, y_pred_prob)
+        # save ROC
+        plt_curve.figure(figsize=(4, 4))
+        plt_curve.plot([0, 1], [0, 1], linestyle='--')
+        # genarate the roc_curve for the model
+        plt_curve.plot(fpr, tpr, marker='.')
+        plt_curve.title('ROC Curve')
+        plt_curve.ylabel('True Positive Rate')
+        plt_curve.xlabel('False Positive Rate')
+        plt_curve.legend()
+
+        f = BytesIO()
+        plt_curve.savefig(f)
+        content_file = ContentFile(f.getvalue())
+        image_file = InMemoryUploadedFile(content_file, None, 'foo.jpg', 'image/jpeg', content_file.tell, None)
+        image_instance = ImageModel.objects.create(image=image_file)
+        image_instance.save()
+
+        # save confusion_matrix
+        axiesLables = ['Normal', 'Fraud']
+        conf_matrix = confusion_matrix(y_test, new_yPred)
+        plt_curve.figure(figsize=(4, 4))
+        sns.heatmap(conf_matrix, xticklabels=axiesLables, yticklabels=axiesLables, annot=True, fmt="d")
+        plt_curve.title("Confusion matrix")
+        plt_curve.ylabel('True class')
+        plt_curve.xlabel('Predicted class')
+
+
+        f = BytesIO()
+        plt_curve.savefig(f)
+        content_file = ContentFile(f.getvalue())
+        image_file = InMemoryUploadedFile(content_file, None, 'foo.jpg', 'image/jpeg', content_file.tell, None)
+        image_instance.cm = image_file
+        image_instance.save()
+
+        return acc, prec, rec, f1, image_instance.image, image_instance.cm
 
     def provable_defense(self, selected_train_model, x_train, x_train_adv, y_train, y_train_adv, x_test, y_test):
 
@@ -103,3 +150,4 @@ class Defense:
         f1 = f1_score(y_test, x_predict_defended)
 
         return acc, prec, rec, f1
+
