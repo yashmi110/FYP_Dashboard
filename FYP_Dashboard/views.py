@@ -94,10 +94,10 @@ def index(request):
             acc, prec, rec, f1, roc, cm = defence.adversarial_training_defense(selected_train_model, X_train, x_train_adv,
                                                                       yTrain, y_train_adv, X_test, yTest)
         elif defense_type == "Randomization":
-            acc, prec, rec, f1 = defence.randomization_defense(selected_train_model, X_train, x_train_adv, yTrain,
+            acc, prec, rec, f1,roc, cm = defence.randomization_defense(selected_train_model, X_train, x_train_adv, yTrain,
                                                           y_train_adv, X_test, yTest)
         else:
-            acc, prec, rec, f1 = defence.provable_defense(selected_train_model, X_train, x_train_adv, yTrain,
+            acc, prec, rec, f1,roc, cm = defence.provable_defense(selected_train_model, X_train, x_train_adv, yTrain,
                                                           y_train_adv, X_test, yTest)
 
         data['d_acc'] = round((acc * 100), 2)
