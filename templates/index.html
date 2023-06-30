@@ -67,8 +67,7 @@
               <button class="btn btn-outline-secondary" type="button">Learning model</button>
               <select class="form-select" id="modelTypeSelect" aria-label="Example select with button addon" type="text" name="modelTypeSelect">
                 <option value="knn">KNN</option>
-                <option value="rf">Random Forest</option>
-                <option value="lr">Logistic Regression</option>
+                 <option value="rf">Random Forest</option>
                 <option value="dt">Decision Tree</option>
               </select>
             </div>
@@ -88,6 +87,8 @@
             <h6>
                 F1-Score : {{ f1 }}
             </h6>
+                <img src={{ n_roc.url }} width="400px"/>
+                <img src={{ n_cm.url }} width="400px"/>
       </div>
     </div>
     <br><br>
@@ -97,9 +98,9 @@
              <div class="input-group mb-3">
               <button class="btn btn-outline-secondary" type="button" name="attackTypeSelect" for="attackTypeSelect">Attack model</button>
               <select class="form-select" id="attackTypeSelect" aria-label="Example select with button addon" type="text" name="attackTypeSelect">
-                <option value="zoo">Zeroth Order Optimisation</option>
-                <option value="dp">DeepFool</option>
-                <option value="en">ElasticNet</option>
+                  <option value="zoo">Zeroth Order Optimisation</option>
+                  <option value="dp">DeepFool</option>
+                  <option value="en">Elastic Net</option>
               </select>
             </div>
 
@@ -123,6 +124,8 @@
                 <h6>
                     F1-Score : {{ a_f1 }}
                 </h6>
+                <img src={{ a_roc.url }} width="400px"/>
+                <img src={{ a_cm.url }} width="400px"/>
         </div>
     {% endif %}
     </div>
@@ -153,8 +156,8 @@
                     F1-Score : {{ d_f1 }}
                 </h6>
 
-                <img src={{ roc.url }} width="500px"/>
-                <img src={{ cm.url }} width="500px"/>
+                <img src={{ roc.url }} width="400px"/>
+                <img src={{ cm.url }} width="400px"/>
 
         </div>
     </div>

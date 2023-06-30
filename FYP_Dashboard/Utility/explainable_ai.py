@@ -25,7 +25,7 @@ class ExplainableAI:
 
                             list.append(f"Before the attack  {z} and it has a contribution value of {y}. After the "
                                         f"attack {a} and it has a slightly {contribute} contribution value of {b}, "
-                                        f"indicating that it has slightly reduced the model's prediction score.")
+                                        f"indicating that it has slightly reduced the model's robustness.")
                             break
         return list
 

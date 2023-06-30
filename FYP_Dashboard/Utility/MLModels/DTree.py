@@ -1,8 +1,8 @@
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import classification_report, accuracy_score
 from sklearn.metrics import precision_score, recall_score
 from sklearn.metrics import f1_score, matthews_corrcoef
-from sklearn.metrics import confusion_matrix
-from sklearn.neighbors import KNeighborsClassifier
+from sklearn import tree
 
 from io import BytesIO
 from django.core.files.base import ContentFile
@@ -15,7 +15,7 @@ import seaborn as sns
 from ...models import ImageModel
 
 
-class Knn:
+class DTree:
 
     def __init__(self, xTrain, yTrain, yTest, xTest):
         self.xTrain = xTrain
@@ -28,14 +28,14 @@ class Knn:
         print("call model_train")
 
         # random forest model creation
-        knn = KNeighborsClassifier(n_neighbors=100)
-        knn.fit(self.xTrain, self.yTrain)
+        dTree = tree.DecisionTreeClassifier()
+        dTree.fit(self.xTrain, self.yTrain)
 
         #prediction
         print("start predication")
-        yPred = knn.predict(self.xTest)
+        yPred = dTree.predict(self.xTest)
 
-        print("The model used is KNN")
+        print("The model used is DTree")
 
         acc = accuracy_score(self.yTest, yPred)
         print("The accuracy is {}".format(acc))
@@ -86,4 +86,4 @@ class Knn:
         image_instance.cm = image_file
         image_instance.save()
 
-        return knn, acc, prec, rec, f1, image_instance.image, image_instance.cm
+        return dTree, acc, prec, rec, f1, image_instance.image, image_instance.cm

@@ -61,12 +61,14 @@ def index(request):
         model_training.X_test = X_test
         model_training.yTrain = yTrain
         model_training.yTest = yTest
-        selected_train_model, acc, prec, rec, f1 = model_training.training_model()
+        selected_train_model, acc, prec, rec, f1, n_roc, n_cm = model_training.training_model()
 
         data['acc'] = round((acc * 100), 2)
         data['prec'] = round((prec * 100), 2)
         data['rec'] = round((rec * 100), 2)
         data['f1'] = round((f1 * 100), 2)
+        data['n_roc'] = n_roc
+        data['n_cm'] = n_cm
 
         before_attack = explainable.get_values(X_train.values, X_train.columns, selected_train_model, X_test.values[0])
 
@@ -80,12 +82,14 @@ def index(request):
         y_train_adv = selected_train_model.predict(x_train_adv)
         data["description_list"] = explainable.get_description(before_attack, after_attack, X_train.columns)
 
-        acc, prec, rec, f1 = attack.attack_evaluation(x_train_adv, yTrain, selected_train_model)
+        acc, prec, rec, f1,a_roc, a_cm = attack.attack_evaluation(x_train_adv, yTrain, selected_train_model)
 
         data['a_acc'] = round((acc * 100), 2)
         data['a_prec'] = round((prec * 100), 2)
         data['a_rec'] = round((rec * 100), 2)
         data['a_f1'] = round((f1 * 100), 2)
+        data['a_roc'] = a_roc
+        data['a_cm'] = a_cm
 
     elif 'btnDefence' in request.POST:
 

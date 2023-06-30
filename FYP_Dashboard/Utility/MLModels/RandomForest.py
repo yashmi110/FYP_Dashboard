@@ -1,3 +1,4 @@
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import classification_report, accuracy_score
 from sklearn.metrics import precision_score, recall_score
 from sklearn.metrics import f1_score, matthews_corrcoef
@@ -15,7 +16,7 @@ import seaborn as sns
 from ...models import ImageModel
 
 
-class Knn:
+class RandomForest:
 
     def __init__(self, xTrain, yTrain, yTest, xTest):
         self.xTrain = xTrain
@@ -28,14 +29,14 @@ class Knn:
         print("call model_train")
 
         # random forest model creation
-        knn = KNeighborsClassifier(n_neighbors=100)
-        knn.fit(self.xTrain, self.yTrain)
+        rfc = RandomForestClassifier()
+        rfc.fit(self.xTrain, self.yTrain)
 
         #prediction
         print("start predication")
-        yPred = knn.predict(self.xTest)
+        yPred = rfc.predict(self.xTest)
 
-        print("The model used is KNN")
+        print("The model used is RandomForest")
 
         acc = accuracy_score(self.yTest, yPred)
         print("The accuracy is {}".format(acc))
@@ -86,4 +87,4 @@ class Knn:
         image_instance.cm = image_file
         image_instance.save()
 
-        return knn, acc, prec, rec, f1, image_instance.image, image_instance.cm
+        return rfc, acc, prec, rec, f1, image_instance.image, image_instance.cm
