@@ -52,7 +52,9 @@ def index(request):
         feature_selection.className = label_parameter
         feature_selection.split_data()
         feature_selection.evaluate_methods()
-        X_train, X_test, yTrain, yTest = feature_selection.find_best_method()
+        X_train, X_test, yTrain, yTest, best_method = feature_selection.find_best_method()
+
+        data['best_method'] = best_method
 
     elif 'btnNormalEnv' in request.POST:
         selected_model = request.POST['modelTypeSelect']
@@ -104,7 +106,7 @@ def index(request):
             acc, prec, rec, f1,roc, cm = defence.provable_defense(selected_train_model, X_train, x_train_adv, yTrain,
                                                           y_train_adv, X_test, yTest)
 
-        data['d_acc'] = round((acc * 100), 2)
+        data['d_acc'] = round(((acc * 100)), 2)
         data['d_prec'] = round((prec * 100), 2)
         data['d_rec'] = round((rec * 100), 2)
         data['d_f1'] = round((f1 * 100), 2)

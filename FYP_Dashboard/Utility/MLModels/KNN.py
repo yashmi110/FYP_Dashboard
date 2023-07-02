@@ -27,7 +27,7 @@ class Knn:
 
         print("call model_train")
 
-        # random forest model creation
+        # KNN model creation
         knn = KNeighborsClassifier(n_neighbors=100)
         knn.fit(self.xTrain, self.yTrain)
 

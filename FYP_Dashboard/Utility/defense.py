@@ -15,6 +15,7 @@ from django.core.files.base import ContentFile
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from ..models import *
 
+
 class Defense:
 
     def __init__(self):
@@ -90,7 +91,7 @@ class Defense:
         rec = recall_score(y_test, x_predict_defended)
         f1 = f1_score(y_test, x_predict_defended)
 
-        y_pred_prob = selected_train_model.predict_proba(x_test)[::, 1]
+        # y_pred_prob = selected_train_model.predict_proba(x_test)[::, 1]
         fpr, tpr, _ = metrics.roc_curve(y_test, x_predict_defended)
         # save ROC
         plt_curve.figure(figsize=(4, 4))
@@ -147,31 +148,22 @@ class Defense:
         new_y_train = np.append(y_train, y_train_adv, axis=0)
 
         # Define a set of machine learning models
-        models = [RandomForestClassifier(n_estimators=100, max_depth=5),
-                  RandomForestClassifier(n_estimators=100, max_depth=10),
-                  RandomForestClassifier(n_estimators=200, max_depth=5)]
-
-        best_model = None
-        best_score = 100
+        models = selected_train_model
 
         imputer = SimpleImputer(strategy='mean')
         imputed_new_x_train = imputer.fit_transform(new_x_train)
         imputed_x_test = imputer.transform(x_test)
 
         for noise_func in [self.add_gaussian_noise, self.add_salt_and_pepper_noise]:
-            for i in range(len(models)):
-                # Train the model on the training set
-                models[i].fit(imputed_new_x_train, new_y_train)
 
-                # Evaluate the performance of the model on the validation set
-                score = accuracy_score(y_test, models[i].predict(imputed_x_test))
-                print(score)
+            # Train the model on the training set
+            models.fit(imputed_new_x_train, new_y_train)
 
-                # Check if the current combination is the best
-                if score < best_score:
-                    best_score = score
-                    best_model = (noise_func, models[i], i)
+            # Evaluate the performance of the model on the validation set
+            score = accuracy_score(y_test, models.predict(imputed_x_test))
+            print(score)
 
+        best_model = (noise_func, models)
         print(f'Best combination: {best_model[0].__name__}, {best_model[1].__class__.__name__}')
 
         self_model = best_model[1].fit(imputed_new_x_train, new_y_train)
@@ -183,12 +175,12 @@ class Defense:
         rec = recall_score(y_test, x_predict_defended)
         f1 = f1_score(y_test, x_predict_defended)
 
-        y_pred_prob = selected_train_model.predict_proba(x_test)[::, 1]
+        # y_pred_prob = selected_train_model.predict_proba(x_test)[::, 1]
         fpr, tpr, _ = metrics.roc_curve(y_test, x_predict_defended)
         # save ROC
         plt_curve.figure(figsize=(4, 4))
         plt_curve.plot([0, 1], [0, 1], linestyle='--')
-        # genarate the roc_curve for the model
+        # generate the roc_curve for the model
         plt_curve.plot(fpr, tpr, marker='.')
         plt_curve.title('ROC Curve')
         plt_curve.ylabel('True Positive Rate')
@@ -217,5 +209,4 @@ class Defense:
         image_file = InMemoryUploadedFile(content_file, None, 'foo.jpg', 'image/jpeg', content_file.tell, None)
         image_instance.cm = image_file
         image_instance.save()
-        return acc, prec, rec, f1,image_instance.image, image_instance.cm
-
+        return acc, prec, rec, f1, image_instance.image, image_instance.cm

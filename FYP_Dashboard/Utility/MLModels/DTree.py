@@ -27,7 +27,7 @@ class DTree:
 
         print("call model_train")
 
-        # random forest model creation
+        # DecisionTreeClassifier model creation
         dTree = tree.DecisionTreeClassifier()
         dTree.fit(self.xTrain, self.yTrain)
 
