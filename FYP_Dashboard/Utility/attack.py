@@ -50,9 +50,10 @@ class Attack:
             print("Attack type not support")
             return
 
-        attack_potion = 30
+        attack_potion = 5
 
         if data.shape[0] > attack_potion:
+
             attack_set = data[:attack_potion]
             data_adv = attack.generate(attack_set)
 
@@ -63,8 +64,10 @@ class Attack:
                              :target_shape[0], :]
             return augmented_data
         else:
+            print("call else ")
             data_adv = attack.generate(data)
             return data_adv
+
 
     def attack_evaluation(self, x_train_adv, y_train, model):
 
