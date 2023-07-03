@@ -106,7 +106,7 @@ def index(request):
             acc, prec, rec, f1,roc, cm = defence.provable_defense(selected_train_model, X_train, x_train_adv, yTrain,
                                                           y_train_adv, X_test, yTest)
 
-        data['d_acc'] = round(((acc * 100)), 2)
+        data['d_acc'] = round(((acc * 100)), 4)
         data['d_prec'] = round((prec * 100), 2)
         data['d_rec'] = round((rec * 100), 2)
         data['d_f1'] = round((f1 * 100), 2)
