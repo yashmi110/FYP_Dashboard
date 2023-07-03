@@ -5,6 +5,16 @@ from sklearn.metrics import f1_score, matthews_corrcoef
 from sklearn.metrics import confusion_matrix
 from sklearn.neighbors import KNeighborsClassifier
 
+from io import BytesIO
+from django.core.files.base import ContentFile
+from django.core.files.uploadedfile import InMemoryUploadedFile
+from matplotlib import pyplot as plt_curve
+from sklearn import metrics
+from sklearn.metrics import confusion_matrix
+import seaborn as sns
+
+from ...models import ImageModel
+
 
 class RandomForest:
 
@@ -43,4 +53,38 @@ class RandomForest:
         MCC = matthews_corrcoef(self.yTest, yPred)
         print("The Matthews correlation coefficient is {}".format(MCC))
 
-        return rfc, acc, prec, rec, f1
+        fpr, tpr, _ = metrics.roc_curve(self.yTest, yPred)
+        # save ROC
+        plt_curve.figure(figsize=(4, 4))
+        plt_curve.plot([0, 1], [0, 1], linestyle='--')
+        # genarate the roc_curve for the model
+        plt_curve.plot(fpr, tpr, marker='.')
+        plt_curve.title('ROC Curve')
+        plt_curve.ylabel('True Positive Rate')
+        plt_curve.xlabel('False Positive Rate')
+        plt_curve.legend()
+
+        f = BytesIO()
+        plt_curve.savefig(f)
+        content_file = ContentFile(f.getvalue())
+        image_file = InMemoryUploadedFile(content_file, None, 'foo.jpg', 'image/jpeg', content_file.tell, None)
+        image_instance = ImageModel.objects.create(image=image_file)
+        image_instance.save()
+
+        # save confusion_matrix
+        axiesLables = ['Normal', 'Fraud']
+        conf_matrix = confusion_matrix(self.yTest, yPred)
+        plt_curve.figure(figsize=(4, 4))
+        sns.heatmap(conf_matrix, xticklabels=axiesLables, yticklabels=axiesLables, annot=True, fmt="d")
+        plt_curve.title("Confusion matrix")
+        plt_curve.ylabel('True class')
+        plt_curve.xlabel('Predicted class')
+
+        f = BytesIO()
+        plt_curve.savefig(f)
+        content_file = ContentFile(f.getvalue())
+        image_file = InMemoryUploadedFile(content_file, None, 'foo.jpg', 'image/jpeg', content_file.tell, None)
+        image_instance.cm = image_file
+        image_instance.save()
+
+        return rfc, acc, prec, rec, f1, image_instance.image, image_instance.cm

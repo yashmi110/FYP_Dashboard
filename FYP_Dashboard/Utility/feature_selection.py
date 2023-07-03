@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.feature_selection import SelectKBest, mutual_info_classif, f_classif
+from sklearn.feature_selection import SelectKBest, mutual_info_classif, f_classif, RFE
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsClassifier
@@ -19,6 +19,7 @@ class FeatureSelection:
         ('Univariate Selection', SelectKBest(score_func=mutual_info_classif, k=10)),
         ('Univariate Selection (ANOVA F-value)', SelectKBest(score_func=f_classif, k=10)),
         ('Random Forest Importance', RandomForestClassifier(n_estimators=100)),
+        ('Wrapper Method (Recursive Feature Elimination)', RFE(estimator=RandomForestClassifier(n_estimators=100), n_features_to_select=10)),
         # Add more feature selection methods as desired
     ]
 
@@ -33,6 +34,7 @@ class FeatureSelection:
 
     def evaluate_methods(self):
 
+        global X_train_selected
         print("evaluate_methods call")
         for method_name, method in self.feature_selection_methods:
             # Apply feature selection method
@@ -43,7 +45,10 @@ class FeatureSelection:
             X_train_scaled = scaler.fit_transform(self.X_train)
             X_val_scaled = scaler.transform(self.X_val)
 
-            if isinstance(method, SelectKBest):
+            if isinstance(method, (SelectKBest, RFE)):
+                X_train_selected = method.fit_transform(X_train_scaled, self.y_train)
+                X_val_selected = method.transform(X_val_scaled)
+            elif isinstance(method, SelectKBest):
                 X_train_selected = method.fit_transform(self.X_train, self.y_train)
                 X_val_selected = method.transform(self.X_val)
             elif isinstance(method, RandomForestClassifier):
@@ -81,7 +86,7 @@ class FeatureSelection:
         best_method_obj = []
         for method_name, method in self.feature_selection_methods:
             if method_name == best_method:
-                if isinstance(method, SelectKBest):
+                if isinstance(method,  (SelectKBest, RFE)):
                     best_method_obj = method.get_support(indices=True)
                 elif isinstance(method, RandomForestClassifier):
                     importance = method.feature_importances_
@@ -93,4 +98,4 @@ class FeatureSelection:
 
         X_fe_train, X_fe_test, y_fe_train, y_fe_test = train_test_split(X_selected, self.y, test_size=0.2, random_state=42)
 
-        return X_fe_train, X_fe_test, y_fe_train, y_fe_test
+        return X_fe_train, X_fe_test, y_fe_train, y_fe_test, best_method

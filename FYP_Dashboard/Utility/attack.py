@@ -4,8 +4,18 @@ from sklearn.utils import shuffle
 from art.estimators.classification import SklearnClassifier
 from art.attacks.evasion import ZooAttack, DeepFool, ElasticNet, VirtualAdversarialMethod, UniversalPerturbation, \
     HopSkipJump
+from art.attacks.evasion import ZooAttack, DeepFool, ElasticNet
+from art.attacks.evasion import ZooAttack, DeepFool, ElasticNet, VirtualAdversarialMethod, UniversalPerturbation,HopSkipJump
 
-from art.attacks.evasion import FastGradientMethod, BasicIterativeMethod
+from io import BytesIO
+from django.core.files.base import ContentFile
+from django.core.files.uploadedfile import InMemoryUploadedFile
+from ..models import *
+from matplotlib import pyplot as plt_curve
+from sklearn import metrics
+from sklearn.metrics import confusion_matrix
+import seaborn as sns
+
 
 # Define the data augmentation function
 def augment_data(data):
@@ -21,6 +31,7 @@ def augment_data(data):
 class Attack:
     def generate_adversarial_samples(self, data, attack_type, attack_model):
 
+        print(data)
         if attack_type == "zoo":
             art_classifier = SklearnClassifier(model=attack_model)
             zoo = ZooAttack(classifier=art_classifier, confidence=0.0, targeted=False, learning_rate=1e-1, max_iter=30,
@@ -64,7 +75,6 @@ class Attack:
                              :target_shape[0], :]
             return augmented_data
         else:
-            print("call else ")
             data_adv = attack.generate(data)
             return data_adv
 
@@ -81,4 +91,38 @@ class Attack:
 
         f1 = f1_score(y_train, y_train_adv)
 
-        return acc, prec, rec, f1
+        fpr, tpr, _ = metrics.roc_curve(y_train, y_train_adv)
+        # save ROC
+        plt_curve.figure(figsize=(4, 4))
+        plt_curve.plot([0, 1], [0, 1], linestyle='--')
+        # genarate the roc_curve for the model
+        plt_curve.plot(fpr, tpr, marker='.')
+        plt_curve.title('ROC Curve')
+        plt_curve.ylabel('True Positive Rate')
+        plt_curve.xlabel('False Positive Rate')
+        plt_curve.legend()
+
+        f = BytesIO()
+        plt_curve.savefig(f)
+        content_file = ContentFile(f.getvalue())
+        image_file = InMemoryUploadedFile(content_file, None, 'foo.jpg', 'image/jpeg', content_file.tell, None)
+        image_instance = ImageModel.objects.create(image=image_file)
+        image_instance.save()
+
+        # save confusion_matrix
+        axiesLables = ['Normal', 'Fraud']
+        conf_matrix = confusion_matrix(y_train, y_train_adv)
+        plt_curve.figure(figsize=(4, 4))
+        sns.heatmap(conf_matrix, xticklabels=axiesLables, yticklabels=axiesLables, annot=True, fmt="d")
+        plt_curve.title("Confusion matrix")
+        plt_curve.ylabel('True class')
+        plt_curve.xlabel('Predicted class')
+
+        f = BytesIO()
+        plt_curve.savefig(f)
+        content_file = ContentFile(f.getvalue())
+        image_file = InMemoryUploadedFile(content_file, None, 'foo.jpg', 'image/jpeg', content_file.tell, None)
+        image_instance.cm = image_file
+        image_instance.save()
+
+        return acc, prec, rec, f1,image_instance.image, image_instance.cm

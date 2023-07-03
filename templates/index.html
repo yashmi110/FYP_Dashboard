@@ -10,7 +10,7 @@
 <body>
      <figure class="text-center">
       <blockquote class="blockquote">
-        <h1>FYP DASHBORD</h1>
+        <h1>INTELLIGENCE DEFENSE SYSTEM</h1>
       </blockquote>
       <figcaption class="blockquote-footer">
         ------Faculty of IT UOM<cite title="Source Title"> B18 - Team PicoZen-------</cite>
@@ -89,6 +89,8 @@
             <h6>
                 F1-Score : {{ f1 }}
             </h6>
+                <img src={{ n_roc.url }} width="400px"/>
+                <img src={{ n_cm.url }} width="400px"/>
       </div>
     </div>
     <br><br>
@@ -124,6 +126,8 @@
                 <h6>
                     F1-Score : {{ a_f1 }}
                 </h6>
+                <img src={{ a_roc.url }} width="400px"/>
+                <img src={{ a_cm.url }} width="400px"/>
         </div>
     {% endif %}
     </div>
@@ -154,8 +158,8 @@
                     F1-Score : {{ d_f1 }}
                 </h6>
 
-                <img src={{ roc.url }} width="500px"/>
-                <img src={{ cm.url }} width="500px"/>
+                <img src={{ roc.url }} width="400px"/>
+                <img src={{ cm.url }} width="400px"/>
 
         </div>
     </div>
