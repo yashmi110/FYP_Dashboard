@@ -150,6 +150,9 @@ class Defense:
         # Define a set of machine learning models
         models = selected_train_model
 
+        best_model = None
+        best_score = 100
+
         imputer = SimpleImputer(strategy='mean')
         imputed_new_x_train = imputer.fit_transform(new_x_train)
         imputed_x_test = imputer.transform(x_test)
@@ -162,8 +165,10 @@ class Defense:
             # Evaluate the performance of the model on the validation set
             score = accuracy_score(y_test, models.predict(imputed_x_test))
             print(score)
+            if score < best_score:
+                best_score = score
+                best_model = (noise_func, models)
 
-        best_model = (noise_func, models)
         print(f'Best combination: {best_model[0].__name__}, {best_model[1].__class__.__name__}')
 
         self_model = best_model[1].fit(imputed_new_x_train, new_y_train)
