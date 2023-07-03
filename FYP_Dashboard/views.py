@@ -3,6 +3,7 @@ import os
 import pandas as pd
 from django.core.files.storage import FileSystemStorage
 from django.shortcuts import render
+from pickle4 import pickle
 
 from FYP_Dashboard.Utility.attack import Attack
 from FYP_Dashboard.Utility.defense import Defense
@@ -105,6 +106,8 @@ def index(request):
         else:
             acc, prec, rec, f1,roc, cm = defence.provable_defense(selected_train_model, X_train, x_train_adv, yTrain,
                                                           y_train_adv, X_test, yTest)
+        with open('media/model.pkl', 'wb') as f:
+            pickle.dump(selected_train_model, f)
 
         data['d_acc'] = round(((acc * 100)), 4)
         data['d_prec'] = round((prec * 100), 2)

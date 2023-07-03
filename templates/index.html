@@ -50,7 +50,7 @@
                         {% endfor %}
                       </select>
                    </div>
-                       <h6>best method : {{best_method}}</h6>
+            <br>
                 <div style="flex:1; justify-content: center;">
                     <button type="submit" name="btnFeatureSelection" class="btn btn-success bg-opacity-25">Feature Selection</button>
                 </div>
@@ -66,9 +66,11 @@
             <div class="input-group mb-3">
               <button class="btn btn-outline-secondary" type="button">Learning model</button>
               <select class="form-select" id="modelTypeSelect" aria-label="Example select with button addon" type="text" name="modelTypeSelect">
-                <option value="knn">KNN</option>
-                 <option value="rf">Random Forest</option>
+
+                <option value="rf">Random Forest</option>
                 <option value="dt">Decision Tree</option>
+                <option value="knn">KNN</option>
+
               </select>
             </div>
             <div style="flex:1; justify-content: center;">
@@ -98,14 +100,16 @@
              <div class="input-group mb-3">
               <button class="btn btn-outline-secondary" type="button" name="attackTypeSelect" for="attackTypeSelect">Attack model</button>
               <select class="form-select" id="attackTypeSelect" aria-label="Example select with button addon" type="text" name="attackTypeSelect">
-                  <option value="zoo">Zeroth Order Optimisation</option>
-                  <option value="dp">DeepFool</option>
-                  <option value="en">Elastic Net</option>
+                <option value="zoo">Zeroth Order Optimisation</option>
+                <option value="dp">DeepFool</option>
+                <option value="en">Elastic Net</option>
               </select>
             </div>
 
             <button type="submit" name="btnAttack" class="btn btn-danger">Attack</button>
-
+                <h6>
+                    Description
+                </h6>
                 <p>
                      {% for description in description_list %}
                         <p>{{ description }}</p>
@@ -158,6 +162,9 @@
 
                 <img src={{ roc.url }} width="400px"/>
                 <img src={{ cm.url }} width="400px"/>
+
+                <a  href="/media/model.pkl" download> Download </a>
+
 
         </div>
     </div>

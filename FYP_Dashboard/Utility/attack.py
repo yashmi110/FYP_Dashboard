@@ -2,6 +2,8 @@ import numpy as np
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, matthews_corrcoef
 from sklearn.utils import shuffle
 from art.estimators.classification import SklearnClassifier
+from art.attacks.evasion import ZooAttack, DeepFool, ElasticNet, VirtualAdversarialMethod, UniversalPerturbation, \
+    HopSkipJump
 from art.attacks.evasion import ZooAttack, DeepFool, ElasticNet
 from art.attacks.evasion import ZooAttack, DeepFool, ElasticNet, VirtualAdversarialMethod, UniversalPerturbation,HopSkipJump
 
@@ -36,20 +38,23 @@ class Attack:
                             binary_search_steps=20, initial_const=1e-3, abort_early=True, use_resize=False,
                             use_importance=False, nb_parallel=10, batch_size=1, variable_h=0.25)
             attack = zoo
-
         elif attack_type == "en":
+
             art_classifier = SklearnClassifier(model=attack_model)
+
             va = VirtualAdversarialMethod(classifier=art_classifier, max_iter=10,
-                                          finite_diff=1e-06, eps=0.1,
-                                          batch_size=1)
+                                     finite_diff=1e-06, eps=0.1,
+                                     batch_size=1)
 
             attack = va
 
         elif attack_type == "dp":
+
             art_classifier = SklearnClassifier(model=attack_model)
-            dp = HopSkipJump(classifier=art_classifier, batch_size=64, targeted=False,
-                             norm=2, max_iter=50, max_eval=10000,
-                             init_eval=100, init_size=100, verbose=True)
+
+            dp = HopSkipJump(classifier = art_classifier, batch_size = 64, targeted = False,
+                     norm = 2, max_iter = 50, max_eval = 10000,
+                     init_eval = 100, init_size = 100, verbose = True)
             attack = dp
 
         else:
@@ -59,6 +64,7 @@ class Attack:
         attack_potion = 5
 
         if data.shape[0] > attack_potion:
+
             attack_set = data[:attack_potion]
             data_adv = attack.generate(attack_set)
 
@@ -71,6 +77,7 @@ class Attack:
         else:
             data_adv = attack.generate(data)
             return data_adv
+
 
     def attack_evaluation(self, x_train_adv, y_train, model):
 

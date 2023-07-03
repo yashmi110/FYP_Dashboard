@@ -2,6 +2,10 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import classification_report, accuracy_score
 from sklearn.metrics import precision_score, recall_score
 from sklearn.metrics import f1_score, matthews_corrcoef
+from sklearn.metrics import confusion_matrix
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn import tree
+
 from sklearn import tree
 
 from io import BytesIO
@@ -27,7 +31,7 @@ class DTree:
 
         print("call model_train")
 
-        # DecisionTreeClassifier model creation
+        # random forest model creation
         dTree = tree.DecisionTreeClassifier()
         dTree.fit(self.xTrain, self.yTrain)
 
