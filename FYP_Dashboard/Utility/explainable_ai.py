@@ -98,4 +98,3 @@ class ExplainableAI:
             str = ', '.join(index_unchanged)
             list.append('The significance of {b1} remains same even after the attack \n'.format(b1=str))
         return list
-
