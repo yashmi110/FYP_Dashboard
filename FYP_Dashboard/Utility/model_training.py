@@ -1,10 +1,11 @@
+from FYP_Dashboard.Utility.MLModels.DTree import DTree
 from FYP_Dashboard.Utility.MLModels.KNN import Knn
 from FYP_Dashboard.Utility.MLModels.RandomForest import RandomForest
 
 
 class ModelTraining:
 
-    selectedTrainingModel = "rf"
+    selectedTrainingModel = ""
     trainModel = ""
 
     X_train, X_test, yTrain, yTest = [], [], [], []
@@ -29,7 +30,7 @@ class ModelTraining:
 
         elif self.selectedTrainingModel == "dt":
             print("dt call")
-            dt_obj = RandomForest(self.X_train, self.yTrain, self.yTest, self.X_test)
+            dt_obj = DTree(self.X_train, self.yTrain, self.yTest, self.X_test)
             dt, acc, prec, rec, f1, n_roc, n_cm  = dt_obj.model_train()
             self.trainModel = dt
 

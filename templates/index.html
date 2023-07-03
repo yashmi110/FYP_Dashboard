@@ -81,15 +81,38 @@
             <h6>
                 Accuracy : {{ acc }}
             </h6>
+            <div class="progress">
+            <div class="progress-bar  " role="progressbar" style="width: {{ acc }}%;" aria-valuenow="{{ acc }}"
+                 aria-valuemin="0"
+                 aria-valuemax="100"> {{ acc }}%
+            </div>
+        </div>
             <h6>
                 Precision : {{ prec }}
             </h6>
+            <div class="progress">
+                <div class="progress-bar  " role="progressbar" style="width: {{ prec }}%;" aria-valuenow="{{ prec }}"
+                 aria-valuemin="0" aria-valuemax="100"> {{ prec }}%
+                </div>
+            </div>
             <h6>
                 Recall : {{ rec }}
             </h6>
+            <div class="progress">
+                <div class="progress-bar  " role="progressbar" style="width: {{ rec }}%;" aria-valuenow="{{ rec }}"
+                     aria-valuemin="0"
+                     aria-valuemax="100"> {{ rec }}%
+                </div>
+            </div>
             <h6>
                 F1-Score : {{ f1 }}
             </h6>
+          <div class="progress">
+              <div class="progress-bar" role="progressbar" style="width: {{ f1 }}%;" aria-valuenow="{{ f1 }}"
+                 aria-valuemin="0"
+                 aria-valuemax="100"> {{ f1 }}%
+            </div>
+        </div>
                 <img src={{ n_roc.url }} width="400px"/>
                 <img src={{ n_cm.url }} width="400px"/>
       </div>
@@ -120,15 +143,37 @@
                 <h6>
                     Accuracy : {{ a_acc }}
                 </h6>
+            <div class="progress">
+                <div class="progress-bar bg-danger " role="progressbar" style="width: {{ a_acc }}%;" aria-valuenow="{{ a_acc }}"
+                 aria-valuemin="0" aria-valuemax="100"> {{ a_acc }}%
+                </div>
+            </div>
                 <h6>
                     Precision : {{ a_prec }}
                 </h6>
+            <div class="progress">
+                <div class="progress-bar bg-danger " role="progressbar" style="width: {{ a_prec }}%;" aria-valuenow="{{ a_prec }}"
+                 aria-valuemin="0" aria-valuemax="100"> {{ a_prec }}%
+                </div>
+            </div>
                 <h6>
                     Recall : {{ a_rec }}
                 </h6>
+                <div class="progress">
+                    <div class="progress-bar bg-danger " role="progressbar" style="width: {{ a_rec }}%;" aria-valuenow="{{ a_rec }}"
+                     aria-valuemin="0"
+                     aria-valuemax="100"> {{ a_rec }}%
+                    </div>
+                </div>
                 <h6>
                     F1-Score : {{ a_f1 }}
                 </h6>
+             <div class="progress">
+            <div class="progress-bar bg-danger" role="progressbar" style="width: {{ a_f1 }}%;" aria-valuenow="{{ a_f1 }}"
+                 aria-valuemin="0"
+                 aria-valuemax="100"> {{ a_f1 }}%
+            </div>
+        </div>
                 <img src={{ a_roc.url }} width="400px"/>
                 <img src={{ a_cm.url }} width="400px"/>
         </div>
@@ -151,15 +196,38 @@
                 <h6>
                     Accuracy : {{ d_acc }}
                 </h6>
+                <div class="progress">
+                    <div class="progress-bar bg-success" role="progressbar" style="width: {{ d_acc }}%;"
+                     aria-valuenow="{{ d_acc }}"
+                     aria-valuemin="0" aria-valuemax="100"> {{ d_acc }}%
+                    </div>
+            </div>
                 <h6>
                     Precision : {{ d_prec }}
                 </h6>
+                 <div class="progress">
+                    <div class="progress-bar bg-success " role="progressbar" style="width: {{ d_prec }}%;" aria-valuenow="{{ d_prec }}"
+                    aria-valuemin="0" aria-valuemax="100"> {{ d_prec }}%
+                    </div>
+                </div>
                 <h6>
                     Recall : {{ d_rec }}
                 </h6>
+             <div class="progress">
+                <div class="progress-bar bg-success " role="progressbar" style="width: {{ d_rec }}%;" aria-valuenow="{{ d_rec }}"
+                     aria-valuemin="0"
+                     aria-valuemax="100"> {{ d_rec }}%
+                </div>
+            </div>
                 <h6>
                     F1-Score : {{ d_f1 }}
                 </h6>
+               <div class="progress">
+                    <div class="progress-bar bg-success" role="progressbar" style="width: {{ d_f1 }}%;" aria-valuenow="{{ d_f1 }}"
+                    aria-valuemin="0"
+                    aria-valuemax="100"> {{ d_f1 }}%
+                    </div>
+                </div>
 
                 <img src={{ roc.url }} width="400px"/>
                 <img src={{ cm.url }} width="400px"/>
