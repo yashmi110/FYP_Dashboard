@@ -56,7 +56,7 @@ class Attack:
             print("Attack type not support")
             return
 
-        attack_potion = 30
+        attack_potion = 5
 
         if data.shape[0] > attack_potion:
             attack_set = data[:attack_potion]
